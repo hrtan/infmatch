@@ -1,0 +1,97 @@
+# InfMatch config (CIFAR-10, ipc50) -- FUSION VARIANT 5: wgrad
+# Influence fusion in the FULL last-layer weight-gradient space (dim = C * d):
+#   per class row c:  (1 + rho * g_c) * embed,   g = softmax(z) - onehot(y)
+# i.e. tiled embedding + rho * (g (x) embed); preserves the joint class x feature
+# structure that the collapsed C-/d-dim modes discard. Unit-normalised per sample.
+
+distibution_train:
+  backend: 'nccl'
+  init_method: 'env://'
+  workers: 8
+
+dataset:
+  dataset: cifar10
+  nclass: 10
+  size: 32
+  data_dir: '/apdcephfs_qy4/share_302593112/haorutan/DATM-main/dataset'
+  load_memory: true
+  batch_real: 1024
+  nch: 3
+
+network:
+  net_type: convnet
+  norm_type: instance
+  depth: 3
+  width: 1.0
+
+train:
+  evaluation_epochs: 2000
+  epoch_print_freq: 10
+  epoch_eval_interval: 100
+  pertrain_epochs: 60
+  batch_size: 128
+  lr: 0.01
+  adamw_lr: 0.001
+  eval_optimizer: adamw
+  momentum: 0.9
+  weight_decay: 5e-4
+  seed: 0
+  model_num: 20
+
+augmentation:
+  mixup: cut
+  beta: 1.0
+  mix_p: 0.5
+  rrc: True
+  dsa: true
+  dsa_strategy: "color_crop_cutout_flip_scale_rotate"
+  aug_type: 'color_crop_cutout'
+
+optimization:
+  optimizer: adamw
+  lr_scale_adam: 0.1
+  lr_img: 0.01
+  mom_img: 0.5
+  lr_sampling_net: 1e-3
+
+save_path:
+  save_dir: "../results"
+  pretrain_dir: '../pretrained_models'
+
+condense:
+  ipc: 50
+  num_premodel: 20
+  niter: 200000
+  iter_calib: 1
+  calib_weight: 1
+  sampling_net: False
+  num_freqs: 4096
+  dis_metrics: "InfMatch"
+  factor: 2
+  alpha_for_loss: 0.5
+  beta_for_loss: 0.5
+  decode_type: 'single'
+  teacher_model_epoch: 20
+
+pretrain_traj:
+  traj_save_interval: 2
+
+infmatch:
+  inf_match_enable: False
+
+trajectory_match:
+  traj_match_enable: True
+  traj_k_min: 2
+  traj_k_max: 3
+
+extra_features:
+  extra_use_image_embedding: True
+  extra_grad_feature: False
+  extra_influence_feature: True
+  extra_feat_weight: 0.2
+  extra_feat_eps: 0.001
+  extra_inf_fusion: wgrad
+
+match:
+  match_metric: probe_cos
+  match_metric_scale: 100.0

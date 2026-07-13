@@ -1,0 +1,29 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+logs/
+
+# Results / outputs / distilled data / checkpoints
+results/
+outputs/
+*.pt
+*.pth
+*.ckpt
+*.npy
+*.npz
+
+# Pretrained / model parameters
+pretrained_models/
+
+# Datasets
+dataset/
+data/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
