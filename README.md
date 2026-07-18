@@ -7,8 +7,9 @@ Inf-Match aligns the final *outcome* of training: it learns a compact synthetic 
 whose influence on the converged model parameters matches that of the full dataset.
 
 For the method, theory, and full experimental results, please refer to the paper:
-**`InfMatch.pdf`** (see the [Citation](#citation) below). This README only covers how to
-run the released code.
+**`InfMatch.pdf`** (see the [Citation](#citation) below). The codebase is based on two excellent previous works: https://github.com/NUS-HPC-AI-Lab/DATM and https://github.com/gszfwsb/NCFM
+
+
 
 ## Repository structure
 
